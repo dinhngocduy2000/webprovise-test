@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import "./App.css";
+import "./App.scss";
 import {
   GeocodingReqTypes,
   GeocodingResTypes,
@@ -17,6 +17,7 @@ import {
   AirQualityResType,
 } from "./libraries/Types/Air-quality-type";
 import { fetchAirQualityCurrentDay } from "./ApiHelper/AirQuality/air-quality-helper";
+import WeatherWidgetContextProvider from "./pages/weatherWidget/weather-widget-context";
 
 function App() {
   const handleFetchLocation = async (params: GeocodingReqTypes) => {
@@ -60,7 +61,9 @@ function App() {
 
   return (
     <div className="App">
-      <WeatherWidget />
+      <WeatherWidgetContextProvider>
+        <WeatherWidget />
+      </WeatherWidgetContextProvider>
     </div>
   );
 }
