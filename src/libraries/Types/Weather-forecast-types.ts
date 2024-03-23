@@ -7,7 +7,7 @@ export type WeatherForeCastResType = {
   daily: DailyWeather[];
 };
 
-type CurrentWeather = {
+export type CurrentWeather = {
   dt: number;
   sunrise: number;
   sunset: number;
@@ -32,7 +32,7 @@ type Weather = {
   icon: string;
 };
 
-type DailyWeather = {
+export type DailyWeather = {
   dt: number;
   sunrise: number;
   sunset: number;
