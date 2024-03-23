@@ -1,4 +1,5 @@
-import { AirQualityReqType } from "../../libraries/Types/Air-quality-type";
+import { AirQualityList } from "../../libraries/Types/Air-quality-type";
+import { GeocodingResTypes } from "../../libraries/Types/Geocoding-types";
 import {
   CurrentWeather,
   DailyWeather,
@@ -6,14 +7,19 @@ import {
 
 export type WeatherWidgetPropsType = {};
 export type WeatherWidgetContextType = {
-  currentLocation: string;
+  airQuality: AirQualityList | undefined;
+  currentLocation: GeocodingResTypes | undefined;
   listDailyForecast: DailyWeather[];
   currentForecast: CurrentWeather | undefined;
   selectedForecast: CurrentWeather | DailyWeather | undefined;
-  handleFetchAirQuality: (data: AirQualityReqType) => Promise<void>;
-  handleFetchLocation: (location: string) => Promise<void>;
-  handleFetchWeatherForecast: (
+  handleFetchAirQuality: (lat: number, lon: number) => Promise<void>;
+  handleFetchLocation: (
     location: string,
-    unit: "imperial" | "metric"
+    units: "metric" | "imperial"
+  ) => Promise<void>;
+  handleFetchForecast: (
+    unit: "imperial" | "metric",
+    lat: number,
+    lon: number
   ) => Promise<void>;
 };

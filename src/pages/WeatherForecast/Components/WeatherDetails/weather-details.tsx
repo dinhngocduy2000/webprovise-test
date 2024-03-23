@@ -14,18 +14,24 @@ type Props = {};
 
 const WeatherDetailsComponent = (props: Props) => {
   const [units, setUnits] = useState<"metric" | "imperial">("metric");
-  const { selectedForecast, currentLocation, handleFetchWeatherForecast } =
+  const { selectedForecast, currentLocation, handleFetchForecast, airQuality } =
     useWeatherWidgetContext(WeatherWidgetContext);
 
   const handleSwitchUnits = (units: "metric" | "imperial") => {
     setUnits(units);
-    handleFetchWeatherForecast(currentLocation.split(",")[0], units);
+    handleFetchForecast(
+      units,
+      currentLocation?.lat || 0,
+      currentLocation?.lon || 0
+    );
   };
 
   return (
     <Paper className="weather-details-ctn">
       <div className="weather-detail-information">
-        <p className="city-country">{currentLocation}</p>
+        <p className="city-country">
+          {currentLocation?.name + ", " + currentLocation?.country}
+        </p>
         <p className="time-overall-weather">
           {moment.unix(selectedForecast?.dt || 0).format("dddd hA")}{" "}
           <span>•</span> <span>{selectedForecast?.weather[0].description}</span>
@@ -72,7 +78,9 @@ const WeatherDetailsComponent = (props: Props) => {
                   " MPH " +
                   convertDegreeToDirection(selectedForecast?.wind_deg || 0)}
             </p>
-            <p>Air Quality: {handleConvertAirQuality(2)}</p>
+            <p>
+              Air Quality: {handleConvertAirQuality(airQuality?.main.aqi || 1)}
+            </p>
           </div>
         </div>
         <div className="daily-forecast-list"></div>

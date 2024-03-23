@@ -12,7 +12,7 @@ export type AirQualityResType = {
   list: AirQualityList[];
 };
 
-type AirQualityList = {
+export type AirQualityList = {
   main: {
     aqi: 1 | 2 | 3 | 4 | 5;
   };

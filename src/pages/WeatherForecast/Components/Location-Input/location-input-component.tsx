@@ -10,8 +10,7 @@ type Props = {};
 
 const LocationInputComponent = (props: Props) => {
   const [locationText, setLocationText] = useState<string>("");
-  const { handleFetchWeatherForecast } =
-    useWeatherWidgetContext(WeatherWidgetContext);
+  const { handleFetchLocation } = useWeatherWidgetContext(WeatherWidgetContext);
 
   return (
     <Paper className="location-input-ctn">
@@ -20,7 +19,7 @@ const LocationInputComponent = (props: Props) => {
         onChange={(e: BaseSyntheticEvent) => {
           setLocationText(e.target.value);
         }}
-        onSearch={() => handleFetchWeatherForecast(locationText, "metric")}
+        onSearch={() => handleFetchLocation(locationText, "metric")}
         allowClear
         placeholder="Enter a city"
       />

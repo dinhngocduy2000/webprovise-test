@@ -3,6 +3,7 @@ import { fetchAirQualityCurrentDay } from "../../ApiHelper/AirQuality/air-qualit
 import { fetchUserLocation } from "../../ApiHelper/Geocoding/geocoding-helper";
 import { fetchWeatherForecast } from "../../ApiHelper/WeatherForecast/weather-forecast";
 import {
+  AirQualityList,
   AirQualityReqType,
   AirQualityResType,
 } from "../../libraries/Types/Air-quality-type";
@@ -14,6 +15,7 @@ import {
   CurrentWeather,
   DailyWeather,
   WeatherForeCastResType,
+  WeatherForecastReqType,
 } from "../../libraries/Types/Weather-forecast-types";
 import { WeatherWidgetContextType } from "./weather-widget-types";
 import { URL_ENUMS } from "../../libraries/Enum/url-enum";
@@ -34,35 +36,13 @@ const WeatherWidgetContextProvider = ({ children }: Props) => {
   const [listDailyForecast, setListDailyForecast] = useState<DailyWeather[]>(
     []
   );
-  const [currentLocation, setCurrentLocation] = useState<string>("");
+  const [currentLocation, setCurrentLocation] = useState<GeocodingResTypes>();
+  const [airQuality, setAirQuality] = useState<AirQualityList>();
   // ----------------------API FUNTIONS------------------------
 
-  const handleFetchLocation = async (location: string) => {
-    const data: GeocodingReqTypes = {
-      q: location,
-      limit: 5,
-      appid: URL_ENUMS.API_KEY,
-    };
-    try {
-      const res: GeocodingResTypes[] = await fetchUserLocation(data);
-      console.log("CHECKING FETCHING USER LOCATION: ", res);
-    } catch (error) {
-      console.log("CHECKING FETCHING USER LOCATION ERROR: ", error);
-    }
-  };
-
-  const handleFetchAirQuality = async (data: AirQualityReqType) => {
-    try {
-      const res: AirQualityResType = await fetchAirQualityCurrentDay(data);
-      console.log("CHECK AIR QUALITY: ", res);
-    } catch (error) {
-      console.log("AIR QUALITY ERROR: ", error);
-    }
-  };
-
-  const handleFetchWeatherForecast = async (
+  const handleFetchLocation = async (
     location: string,
-    unit: "imperial" | "metric"
+    units: "metric" | "imperial"
   ) => {
     const data: GeocodingReqTypes = {
       q: location,
@@ -71,17 +51,49 @@ const WeatherWidgetContextProvider = ({ children }: Props) => {
     };
     try {
       const locationRes: GeocodingResTypes[] = await fetchUserLocation(data);
-      const weatherRes: WeatherForeCastResType = await fetchWeatherForecast({
-        lat: locationRes[0].lat,
-        lon: locationRes[0].lon,
-        appid: URL_ENUMS.API_KEY,
-        exclude: "minutely",
-        units: unit,
-      });
+      setCurrentLocation(locationRes[0]);
+      handleFetchAirQuality(locationRes[0].lat, locationRes[0].lon);
+      handleFetchForecast(units, locationRes[0].lat, locationRes[0].lon);
+      console.log("CHECKING FETCHING USER LOCATION: ", locationRes);
+    } catch (error) {
+      console.log("CHECKING FETCHING USER LOCATION ERROR: ", error);
+    }
+  };
+
+  const handleFetchAirQuality = async (lat: number, lon: number) => {
+    const data: AirQualityReqType = {
+      lat: lat,
+      lon: lon,
+      appid: URL_ENUMS.API_KEY,
+    };
+    try {
+      const res: AirQualityResType = await fetchAirQualityCurrentDay(data);
+      setAirQuality(res.list[0]);
+      console.log("CHECK AIR QUALITY: ", res);
+    } catch (error) {
+      console.log("AIR QUALITY ERROR: ", error);
+    }
+  };
+
+  const handleFetchForecast = async (
+    unit: "imperial" | "metric",
+    lat: number,
+    lon: number
+  ) => {
+    const data: WeatherForecastReqType = {
+      lat: lat,
+      lon: lon,
+      appid: URL_ENUMS.API_KEY,
+      exclude: "minutely",
+      units: unit,
+    };
+    try {
+      const weatherRes: WeatherForeCastResType = await fetchWeatherForecast(
+        data
+      );
       setCurrentForecast(weatherRes.current);
       setSelectedForecast(weatherRes.current);
       setListDailyForecast(weatherRes.daily);
-      setCurrentLocation(locationRes[0].name + ", " + locationRes[0].country);
       console.log("CHECK WEATHER: ", weatherRes);
     } catch (error) {
       console.log("CHECK WEATHER ERROR: ", error);
@@ -93,11 +105,12 @@ const WeatherWidgetContextProvider = ({ children }: Props) => {
       value={{
         handleFetchAirQuality,
         handleFetchLocation,
-        handleFetchWeatherForecast,
         listDailyForecast,
         currentForecast,
         selectedForecast,
         currentLocation,
+        handleFetchForecast,
+        airQuality,
       }}
     >
       {children}
