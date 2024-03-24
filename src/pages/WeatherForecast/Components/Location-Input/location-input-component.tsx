@@ -1,5 +1,5 @@
 import "./location-input.scss";
-import { BaseSyntheticEvent } from "react";
+import { BaseSyntheticEvent, useEffect } from "react";
 import {
   WeatherWidgetContext,
   useWeatherWidgetContext,
@@ -9,8 +9,22 @@ import Input from "antd/es/input/Input";
 type Props = {};
 
 const LocationInputComponent = (props: Props) => {
-  const { handleFetchLocation, units, setLocationText } =
+  const { handleFetchLocation, units, setLocationText, locationText } =
     useWeatherWidgetContext(WeatherWidgetContext);
+
+  useEffect(() => {
+    if (locationText !== undefined) {
+      const timeOut = setTimeout(() => {
+        //wait user to finish typing and then begin searching
+        handleFetchLocation(locationText, units);
+      }, 1000);
+      return () => {
+        clearTimeout(timeOut);
+      };
+    }
+    //eslint-disable-next-line
+  }, [locationText]);
+  // if not add that line, this will give warning React Hook useEffect has missing dependencies: 'handleFetchLocation' and 'units'. Either include them or remove the dependency array
 
   return (
     <Paper className="location-input-ctn">
@@ -18,7 +32,6 @@ const LocationInputComponent = (props: Props) => {
         size="large"
         onChange={(e: BaseSyntheticEvent) => {
           setLocationText(e.target.value);
-          handleFetchLocation(e.target.value, units);
         }}
         allowClear
         placeholder="Enter a city"
