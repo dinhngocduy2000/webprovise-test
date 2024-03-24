@@ -1,0 +1,27 @@
+.daily-forecast-item {
+  padding: 15px;
+  border: 1px solid #969696;
+  border-bottom: none;
+  border-right: none;
+  &.current {
+    background-color: #f7f7f7;
+  }
+  &:hover {
+    cursor: pointer;
+  }
+  p {
+    text-align: center;
+    margin: 0;
+  }
+  &:last-child {
+    border-right: 1px solid #969696;
+  }
+  .forecast-date,
+  .forecast-max-temperature {
+    font-weight: 700;
+  }
+  .forecast-max-temperature {
+    font-size: 18px;
+    margin-bottom: 5px;
+  }
+}

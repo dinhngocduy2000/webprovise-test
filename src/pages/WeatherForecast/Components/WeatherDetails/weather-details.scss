@@ -1,7 +1,13 @@
 .weather-details-ctn {
   width: 100%;
+  min-width: 600px;
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   .weather-detail-information {
     padding: 20px;
+    padding-bottom: 0;
     .city-country {
       font-weight: 700;
       font-size: 20px;
@@ -63,8 +69,8 @@
         }
       }
     }
-    .daily-forecast-list {
-      display: flex;
-    }
+  }
+  .daily-forecast-list {
+    display: flex;
   }
 }

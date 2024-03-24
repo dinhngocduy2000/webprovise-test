@@ -1,25 +1,25 @@
 import "./location-input.scss";
-import { BaseSyntheticEvent, useState } from "react";
-import Search from "antd/es/input/Search";
+import { BaseSyntheticEvent } from "react";
 import {
   WeatherWidgetContext,
   useWeatherWidgetContext,
 } from "../../weather-widget-context";
 import Paper from "@mui/material/Paper";
+import Input from "antd/es/input/Input";
 type Props = {};
 
 const LocationInputComponent = (props: Props) => {
-  const [locationText, setLocationText] = useState<string>("");
-  const { handleFetchLocation } = useWeatherWidgetContext(WeatherWidgetContext);
+  const { handleFetchLocation, units, setLocationText } =
+    useWeatherWidgetContext(WeatherWidgetContext);
 
   return (
     <Paper className="location-input-ctn">
-      <Search
+      <Input
         size="large"
         onChange={(e: BaseSyntheticEvent) => {
           setLocationText(e.target.value);
+          handleFetchLocation(e.target.value, units);
         }}
-        onSearch={() => handleFetchLocation(locationText, "metric")}
         allowClear
         placeholder="Enter a city"
       />

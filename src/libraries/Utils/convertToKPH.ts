@@ -1,3 +1,4 @@
-export const handleConvertToKPH = (meterPerHour: number): number => {
-  return Math.trunc(meterPerHour * 3.6);
+//convert from meter per sec to Kilometer per hour
+export const handleConvertToKPH = (meterPerSec: number): number => {
+  return Math.trunc(meterPerSec * 3.6);
 };

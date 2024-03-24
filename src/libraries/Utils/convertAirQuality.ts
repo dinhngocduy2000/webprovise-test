@@ -1,3 +1,4 @@
+//convert air quality into text
 export const handleConvertAirQuality = (quality: 1 | 2 | 3 | 4 | 5): string => {
   switch (quality) {
     case 1:
